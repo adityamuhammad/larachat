@@ -19,14 +19,14 @@ class ChatController extends Controller
         return view('chat');
     }
 
-    public function send(request $request)
+    public function send(Request $request)
     {
         $user = User::find(Auth::id());
         $this->saveToSession($request);
         event(new ChatEvent($request->message, $user));
     }
 
-    public function saveToSession(request $request)
+    public function saveToSession(Request $request)
     {
         session()->put('chat', $request->message);
     }
