@@ -28,6 +28,15 @@ const app = new Vue({
             message:[],
             user:[],
             color:[]
+        },
+        typing: ''
+    },
+    watch:{
+        message(){
+            Echo.private('chat')
+                .whisper('typing', {
+                    name: this.message
+                });
         }
     },
     methods:{
@@ -54,8 +63,15 @@ const app = new Vue({
             .listen('ChatEvent', (e) => {
                 this.chat.message.push(e.message);
                 this.chat.user.push(e.user);
-                this.chat.color.push('info');
+                this.chat.color.push('warning');
                 console.log(e);
-        });
+            })
+            .listenForWhisper('typing', (e) => {
+                if(e.name != ''){
+                    this.typing = 'typing...'
+                } else {
+                    this.typing = ''
+                }
+            });
     }
 });

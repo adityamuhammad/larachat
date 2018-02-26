@@ -11823,6 +11823,14 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
             message: [],
             user: [],
             color: []
+        },
+        typing: ''
+    },
+    watch: {
+        message: function message() {
+            Echo.private('chat').whisper('typing', {
+                name: this.message
+            });
         }
     },
     methods: {
@@ -11850,8 +11858,14 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         Echo.private('chat').listen('ChatEvent', function (e) {
             _this2.chat.message.push(e.message);
             _this2.chat.user.push(e.user);
-            _this2.chat.color.push('info');
+            _this2.chat.color.push('warning');
             console.log(e);
+        }).listenForWhisper('typing', function (e) {
+            if (e.name != '') {
+                _this2.typing = 'typing...';
+            } else {
+                _this2.typing = '';
+            }
         });
     }
 });
