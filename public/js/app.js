@@ -11931,8 +11931,8 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
             if (this.message.length != 0) {
                 this.chat.message.push(this.message);
-                this.chat.user.push('you');
                 this.chat.color.push('success');
+                this.chat.user.push('you');
                 this.chat.time.push(this.getTime());
                 axios.post('/send', {
                     message: this.message,

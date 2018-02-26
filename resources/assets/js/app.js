@@ -49,8 +49,8 @@ const app = new Vue({
         send(){
             if(this.message.length != 0){
                 this.chat.message.push(this.message);
-                this.chat.user.push('you');
                 this.chat.color.push('success');
+                this.chat.user.push('you');
                 this.chat.time.push(this.getTime());
                 axios.post('/send', {
                     message : this.message,
