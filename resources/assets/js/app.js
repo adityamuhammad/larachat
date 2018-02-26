@@ -12,6 +12,10 @@ import Vue from 'vue'
 import VueChatScroll from 'vue-chat-scroll'
 Vue.use(VueChatScroll)
 
+// the notifcations user join and left the room 
+import Toaster from 'v-toaster'
+import 'v-toaster/dist/v-toaster.css'
+Vue.use(Toaster, {timeout: 5000})
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -30,7 +34,8 @@ const app = new Vue({
             color:[],
             time:[]
         },
-        typing: ''
+        typing: '',
+        numberOfUsers:0
     },
     watch:{
         message(){
@@ -71,7 +76,7 @@ const app = new Vue({
                 this.chat.user.push(e.user);
                 this.chat.color.push('warning');
                 this.chat.time.push(this.getTime());
-                //console.log(e);
+                console.log(e);
             })
             .listenForWhisper('typing', (e) => {
                 if(e.name != ''){
@@ -79,6 +84,19 @@ const app = new Vue({
                 } else {
                     this.typing = ''
                 }
+            });
+        
+        Echo.join(`chat`)
+            .here((users) => {
+                this.numberOfUsers = users.length;
+            })
+            .joining((user) => {
+                this.numberOfUsers += 1;
+                this.$toaster.success(user.name + ' has joined the chat room');
+            })
+            .leaving((user) => {
+                this.numberOfUsers -= 1;
+                this.$toaster.warning(user.name + ' has left the chat room');
             });
     }
 });
