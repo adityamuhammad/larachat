@@ -53,7 +53,8 @@ const app = new Vue({
                 this.chat.color.push('success');
                 this.chat.time.push(this.getTime());
                 axios.post('/send', {
-                    message : this.message
+                    message : this.message,
+                    chat : this.chat
                   })
                   .then(response => {
                     console.log(response);
@@ -67,16 +68,42 @@ const app = new Vue({
         getTime(){
             let time = new Date();
             return time.getHours() + ':' + time.getMinutes();
+        },
+        getOldMessages(){
+            axios.post('/getOldMessage')
+                .then(response => {
+                    console.log(response);
+                    if (response.data != '') {
+                        this.chat = response.data;
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        deleteSession(){
+            axios.post('deleteSession')
+                .then(response => this.$toaster.success('Chat history has been deleted'));
         }
     },
     mounted() {
+        this.getOldMessages();
         Echo.private('chat')
             .listen('ChatEvent', (e) => {
                 this.chat.message.push(e.message);
                 this.chat.user.push(e.user);
                 this.chat.color.push('warning');
                 this.chat.time.push(this.getTime());
-                console.log(e);
+                axios.post('saveToSession',{
+                    chat : this.chat
+                })
+                    .then(response => {
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                //console.log(e);
             })
             .listenForWhisper('typing', (e) => {
                 if(e.name != ''){

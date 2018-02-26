@@ -29,12 +29,11 @@
                     @{{value}} 
                 </message>
               </ul>
-            <input type="text" v-model="message" @keyup.enter="send" class="form-control" placeholder="Type your message here...">
+            <input type="text" v-model="message" @keyup.enter="send" class="form-control" placeholder="Type your message here..."><br>
+            <a href='' class="btn btn-warning btn-sm" @click.prevent='deleteSession'>Delete Chats</a>
         </div>
       </div>
     </div>
-    
-
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
